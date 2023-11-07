@@ -2,7 +2,7 @@
 
 ## Title
 <!-- Give your project a short title. -->
-NBA - Are players worth their salary and how they should perform
+Are the infamous NBA 2k ratings matching their stats and salaries
 
 ## Main Question
 
