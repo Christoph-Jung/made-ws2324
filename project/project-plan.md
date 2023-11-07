@@ -38,7 +38,15 @@ Player Information, Game Statistics, Shooting Effiency and Advanced Statistics f
 
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
 
-1. Example Issue [#1][i1]
-2. ...
+1. Create data download [i1]
+2. Build data pipeline and preprocess data [i2]
+3. Write test shell script [i3]
+4. Compute the metrics [i4]
+5. Compare metrics, salary with NBA 2k rating [i5]
+6. Generate the plots [i6]
+7. (Optional) Check own metrics by also including the previous season [i7]
+7. (Optional) Add python test script to check for duplicates etc. 
 
-[i1]: https://github.com/jvalue/made-template/issues/1
+[i1]: https://github.com/Christoph-Jung/made-ws2324/issues/1 
+[i2]: https://github.com/Christoph-Jung/made-ws2324/issues/2 
+[i3]: https://github.com/Christoph-Jung/made-ws2324/issues/3 
