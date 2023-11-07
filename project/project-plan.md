@@ -7,7 +7,7 @@ Are the infamous NBA 2k ratings matching their stats and salaries
 ## Main Question
 
 <!-- Think about one main question you want to answer based on the data. -->
-1. Given advanced stats are NBA players worth their salaries with respect to their position and their NBA colleagues.
+1. Given advanced stats and salaries are NBA player matching their NBA 2k rating published prior to the season.
 
 ## Description
 
