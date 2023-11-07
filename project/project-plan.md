@@ -7,7 +7,7 @@ Are the infamous NBA 2k ratings matching their stats and salaries
 ## Main Question
 
 <!-- Think about one main question you want to answer based on the data. -->
-1. Given advanced stats and salaries are NBA player matching their NBA 2k rating published prior to the season.
+1. Given advanced stats and salaries are NBA players matching their NBA 2k rating published prior to the season.
 
 ## Description
 
@@ -42,11 +42,12 @@ Player Information, Game Statistics, Shooting Effiency and Advanced Statistics f
 2. Build data pipeline and preprocess data [i2]
 3. Write test shell script [i3]
 4. Compute the metrics [i4]
-5. Compare metrics, salary with NBA 2k rating [i5]
-6. Generate the plots [i6]
-7. (Optional) Check own metrics by also including the previous season [i7]
+5. Generate the plots [i5]
+6. (Optional) Check own metrics by also including the previous season 
 7. (Optional) Add python test script to check for duplicates etc. 
 
 [i1]: https://github.com/Christoph-Jung/made-ws2324/issues/1 
 [i2]: https://github.com/Christoph-Jung/made-ws2324/issues/2 
 [i3]: https://github.com/Christoph-Jung/made-ws2324/issues/3 
+[i4]: https://github.com/Christoph-Jung/made-ws2324/issues/4 
+[i5]: https://github.com/Christoph-Jung/made-ws2324/issues/5 
