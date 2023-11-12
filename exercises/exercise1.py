@@ -48,13 +48,11 @@ def get_dtype_col(col) -> str:
 def create_db(data: pd.DataFrame, type_dict: dict) -> None:
     cwd = os.getcwd()
     if os.path.split(cwd)[1] != "exercises":
-        # path_db = f"sqlite:///data/{DATABASE_NAME}"
         path_db = f"sqlite:///{DATABASE_NAME}"
     else:
-        # path_db = f"sqlite:///../data/{DATABASE_NAME}"
         path_db = f"sqlite:///../{DATABASE_NAME}"
     engine = create_engine(path_db)
-    data.to_sql(TABLE_NAME, engine, if_exists="replace", dtype=type_dict)
+    data.to_sql(TABLE_NAME, engine, if_exists="replace", index=False, dtype=type_dict)
 
 
 def main() -> None:
