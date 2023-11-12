@@ -1,3 +1,11 @@
 .DS_Store
 /data/*
 !/data/.gitkeep
+
+.venv
+.vscode
+exercises/__pycache__
+
+# for testing
+data.csv
+testing
