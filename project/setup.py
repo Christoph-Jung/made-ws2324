@@ -1,11 +1,20 @@
 import os
 from typing import Tuple
-import kaggle
+
 import pandas as pd
 import urllib3
 
 from zipfile import ZipFile
 from sqlalchemy import create_engine
+
+error_message = ("Couldn't find authentication file at ~/.kaggle/kaggle.json directory. "
+                 "To fix this error please add authentication. More information is available at "
+                 "https://www.kaggle.com/docs/api#getting-started-installation-&-authentication -> "
+                 "Aborting...")
+try:
+    import kaggle
+except OSError:
+    raise OSError(error_message) from None
 
 
 def authenticate() -> None:
@@ -13,7 +22,7 @@ def authenticate() -> None:
         kaggle.api.authenticate()
         print("Authenticated using kaggle.json")
     except OSError:
-        raise RuntimeError("Couldn't find kaggle.json in ~ directory. Aborting...")
+        raise OSError(error_message) from None
 
 
 def download_data() -> Tuple[pd.DataFrame, pd.DataFrame]:
