@@ -23,7 +23,6 @@ pipeline dbStopsPipeline {
             "Breite" oftype ValidCoordinates,
             "Betreiber_Name" oftype ValidTexts,
             "Betreiber_Nr" oftype ValidTexts,
-            "Status" oftype ValidTexts,
         ];
     }
 
