@@ -65,7 +65,7 @@ pipeline dbStopsPipeline {
     }
 
     constraint ifoptConstraint oftype RegexConstraint {
-          regex: /[a-zA-Z]{2}:\d+:\d+(:\d+)?/;
+          regex: /[a-z]{2}:\d+:\d+(:\d+)?/;
     }
 
     valuetype ValidTexts oftype text {
@@ -77,7 +77,7 @@ pipeline dbStopsPipeline {
     // Note: Length Constraint doesn't work without a maxLength setting
     constraint noEmptyCells oftype LengthConstraint {
         minLength: 1;
-        maxLength: 2147483647;
+        maxLength: 9007199254740991;
     }
 }
 
