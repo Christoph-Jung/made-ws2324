@@ -6,6 +6,7 @@
 .venv
 .vscode
 exercises/__pycache__
+project/__pycache__
 
 # for testing
 data.csv
