@@ -83,10 +83,10 @@ def save_sqlite(db: pd.DataFrame, db_name: str, table_name: str, type_dict: dict
 
 def workflow():
     authenticate()
-    d1, d2 = download_data() 
+    d1, d2 = download_data()
     stats_2k_cleaned, stats_player_cleaned = process_data(d1, d2)
-    save_sqlite(stats_2k_cleaned, "main_db", "stats_2k")
-    save_sqlite(stats_player_cleaned, "main_db", "stats_player")
+    save_sqlite(stats_2k_cleaned, "main_db.sqlite", "stats_2k")
+    save_sqlite(stats_player_cleaned, "main_db.sqlite", "stats_player")
 
 
 if __name__ == "__main__":
