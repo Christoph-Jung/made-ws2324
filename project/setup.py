@@ -16,6 +16,8 @@ try:
 except OSError:
     raise OSError(error_message) from None
 
+DB_NAME = "main_db.sqlite"
+
 
 def authenticate() -> None:
     try:
@@ -54,6 +56,7 @@ def download_data() -> Tuple[pd.DataFrame, pd.DataFrame]:
     # remove csv files to free space
     os.remove("./data/nba2k-full.csv")
     os.remove("./data/player_mvp_stats.csv")
+    os.remove("./data/player_mvp_stats.csv.zip")
 
     return stats_2k, stats_player
 
@@ -85,8 +88,8 @@ def workflow():
     authenticate()
     d1, d2 = download_data()
     stats_2k_cleaned, stats_player_cleaned = process_data(d1, d2)
-    save_sqlite(stats_2k_cleaned, "main_db.sqlite", "stats_2k")
-    save_sqlite(stats_player_cleaned, "main_db.sqlite", "stats_player")
+    save_sqlite(stats_2k_cleaned, DB_NAME, "stats_2k")
+    save_sqlite(stats_player_cleaned, DB_NAME, "stats_player")
 
 
 if __name__ == "__main__":

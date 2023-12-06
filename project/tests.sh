@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# python3 -c 'pytest.main(['--pyargs',  'data.test_pipeline'])'
+
 python3 ./project/main.py
 path_to_db="./data/main_db.sqlite"
 
 if [ -f "$path_to_db" ]; then
     echo "Output file was created successfully. Further tests are started now..."
-    # pytest ../data/test_testpipe.py   
+    python3 -m data.test_pipeline
 else
     echo "Outputfile couldn't be created."
 fi
