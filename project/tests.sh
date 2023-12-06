@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# python3 -c 'pytest.main(['--pyargs',  'data.test_pipeline'])'
-
 python3 ./project/main.py
 path_to_db="./data/main_db.sqlite"
 
