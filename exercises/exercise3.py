@@ -11,40 +11,15 @@ URL = "https://www-genesis.destatis.de/genesis/downloads/00/tables/46251-0021_00
 def read_data_csv(url: str) -> pd.DataFrame:
     return pd.read_csv(URL, sep=";", dtype={1: str}, header=None,
                        encoding='iso-8859-1', on_bad_lines="warn",
-                       skiprows=7, skipfooter=4)
+                       skiprows=7, skipfooter=4, engine='python')
 
 
 def get_dtypes(data: pd.DataFrame) -> dict:
-    type_dict = {}
-    for column in data.columns:
-        type_dict[str(column)] = get_dtype_col(data[column])
-
-
-def get_dtype_col(col) -> str:
-    '''
-        choose one of the five
-            NULL. The value is a NULL value.
-            INTEGER. The value is a signed integer, stored in 0, 1, 2, 3, 4, 6, or 8 bytes depending on
-                the magnitude of the value.
-            REAL. The value is a floating point value, stored as an 8-byte IEEE floating point number.
-            TEXT. The value is a text string, stored using the database encoding (UTF-8, UTF-16BE or UTF-16LE).
-            BLOB. The value is a blob of data, stored exactly as it was input.
-
-        available types for the column
-    '''
-    data_type = col.dtype
-    if data_type == "float64":
-        return "REAL"
-    elif data_type == "int64":
-        return "INTEGER"
-    else:
-        for entry in col:
-            if not isinstance(entry, str):
-                if entry is None or math.isnan(entry):
-                    continue
-                print(entry)
-                return "BLOB"
-        return "TEXT"
+    type_dict = {'date': 'TEXT', 'CIN': 'TEXT', 'name': 'TEXT',
+                 'petrol': 'INTEGER', 'diesel': 'INTEGER', 'gas': 'INTEGER',
+                 'electro': 'INTEGER', 'hybrid': 'INTEGER', 'plugInHybrid': 'INTEGER',
+                 'others': 'INTEGER'}
+    return type_dict
 
 
 def create_db(data: pd.DataFrame, type_dict: dict) -> None:
