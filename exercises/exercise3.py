@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy.types import Integer, String
 import os
-import math
 
 DATABASE_NAME = "cars.sqlite"
 TABLE_NAME = "cars"
@@ -15,10 +15,10 @@ def read_data_csv(url: str) -> pd.DataFrame:
 
 
 def get_dtypes(data: pd.DataFrame) -> dict:
-    type_dict = {'date': 'TEXT', 'CIN': 'TEXT', 'name': 'TEXT',
-                 'petrol': 'INTEGER', 'diesel': 'INTEGER', 'gas': 'INTEGER',
-                 'electro': 'INTEGER', 'hybrid': 'INTEGER', 'plugInHybrid': 'INTEGER',
-                 'others': 'INTEGER'}
+    type_dict = {'date': String(), 'CIN': String(), 'name': String(),
+                 'petrol': Integer(), 'diesel': Integer(), 'gas': Integer(),
+                 'electro': Integer(), 'hybrid': Integer(), 'plugInHybrid': Integer(),
+                 'others': Integer()}
     return type_dict
 
 
