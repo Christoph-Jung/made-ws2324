@@ -65,7 +65,7 @@ pipeline dbStopsPipeline {
     }
 
     constraint ifoptConstraint oftype RegexConstraint {
-          regex: /[a-z]{2}:\d+:\d+(:\d+)?/;
+          regex: /[-z]{2}:\d+:\d+(:\d+)?/;
     }
 
     valuetype ValidTexts oftype text {
