@@ -51,7 +51,8 @@ jobs:
         echo "Kaggle login successful"
 
     # Run exercise feedback
+    - name: Make test runnable
+      run: chmod +x ./main/project/tests.sh
     - name: Project feedback
       run: |
-        chmod 600 ./main/project/tests.sh
         ./main/project/tests.sh
