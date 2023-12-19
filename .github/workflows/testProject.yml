@@ -24,6 +24,10 @@ jobs:
         python-version: 3.11
         # cache: 'pip'
     
+    # test
+    - name: Testt
+      run: ls
+
     # pip install
     - run: pip install -r project_requirements.txt
     
