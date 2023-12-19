@@ -2,8 +2,11 @@
 
 python3 main/project/main.py
 path_to_db="main/data/main_db.sqlite"
+echo "ls"
 ls
+echo "ls main"
 ls main
+echo "ls main/data"
 ls main/data
 
 if [ -f "$path_to_db" ]; then
