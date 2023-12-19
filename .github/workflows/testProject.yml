@@ -5,43 +5,35 @@ on:
   push:
     branches:
     - main
-    # paths:
-    # - project/**
+    paths:
+    - project/**
 
 jobs:
   project-feedback:
     runs-on: ubuntu-latest
     steps:
+    - name: "check is MY_SECRET exists"
+        env: 
+            name_secret: ${{ secrets.KAGGLE_USERNAME }}
+            key_secret: ${{ secrets.KAGGLE_KEY }}
+        if: ${{ env.name_secret == '' }}
+        run: 'echo "echo the secret KAGGLE_USERNAME is missing. Go to \"settings \> secrets \> actions\" to create it"'
+        if: ${{ env.key_secret == '' }}
+        run: 'echo "echo the secret KAGGLE_KEY is missing. Go to \"settings \> secrets \> actions\" to create it"'
+
     - name: Checkout
       uses: actions/checkout@v3
-      # with:
-        # path: main
 
     # Install python
     - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
         python-version: 3.11
-        # cache: 'pip'
     
-    # test
-    - name: Test
-      run: |
-        echo "ls"
-        ls
-        echo "ls home"
-        ls ~
-          
     # pip install
     - name: Install packages
       run: pip install -r project_requirements.txt
 
-    # - name: Install packages
-    #   shell: bash
-    #   run: |
-    #     pip install kaggle
-    #     pip install pandas
-    
     - name: Kaggle auth
       shell: bash
       run: |
@@ -52,7 +44,7 @@ jobs:
         mkdir -p ~/.kaggle
         mv kaggle.json ~/.kaggle/
         chmod 600 ~/.kaggle/kaggle.json
-        echo "Kaggle login successful"
+        echo "Login to Kaggle successful"
 
     # Run exercise feedback
     - name: Make test runnable
