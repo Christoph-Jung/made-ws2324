@@ -24,6 +24,9 @@ DB_NAME = "main_db.sqlite"
 
 
 def authenticate() -> None:
+    '''
+    try to authenticate using kaggle
+    '''
     try:
         kaggle.api.authenticate()
         print("Authenticated using kaggle.json")

@@ -26,6 +26,17 @@ jobs:
     
     # pip install
     - run: pip install -r project_requirements.txt
+    
+    # kaggle login
+    - name: Login to Kaggle
+      - uses: osbm/kaggle-login@main
+        with:
+          KAGGLE_USERNAME: {{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: {{ secrets.KAGGLE_KEY }}
+
+      - name: Use kaggle api to list datasets
+        run: |
+          kaggle datasets list
 
     # Run exercise feedback
     - name: Project feedback
