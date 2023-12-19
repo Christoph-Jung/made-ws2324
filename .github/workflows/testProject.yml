@@ -31,12 +31,14 @@ jobs:
         ls ~
           
     # pip install
-    # - run: pip install -r ./project_requirements.txt
+    - name: Install packages
+      run: pip install -r ./main/project_requirements.txt
 
-    - name: Install kaggle
-      shell: bash
-      run: |
-        pip install kaggle
+    # - name: Install packages
+    #   shell: bash
+    #   run: |
+    #     pip install kaggle
+    #     pip install pandas
     
     - name: Kaggle auth
       shell: bash
