@@ -2,6 +2,7 @@
 /data/*
 *.sqlite
 !/data/.gitkeep
+!/data/test_pipeline.py
 
 .venv
 .vscode
