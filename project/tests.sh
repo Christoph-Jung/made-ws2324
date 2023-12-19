@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 ./project/main.py
+python3 project/main.py
 path_to_db="./data/main_db.sqlite"
 
 if [ -f "$path_to_db" ]; then
