@@ -10,12 +10,14 @@ jobs:
   project-feedback:
     runs-on: ubuntu-latest
     steps:
-    - name: "check for secrets"
+    - name: "check for username"
       env: 
         name_secret: ${{ secrets.KAGGLE_USERNAME }}
-        key_secret: ${{ secrets.KAGGLE_KEY }}
       if: ${{ env.name_secret == '' }}
       run: 'echo "echo the secret KAGGLE_USERNAME is missing. Go to \"settings \> secrets \> actions\" to create it"'
+    - name: "check for key"
+      env:
+        key_secret: ${{ secrets.KAGGLE_KEY }}
       if: ${{ env.key_secret == '' }}
       run: 'echo "echo the secret KAGGLE_KEY is missing. Go to \"settings \> secrets \> actions\" to create it"'
 
