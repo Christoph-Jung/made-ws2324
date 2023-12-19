@@ -14,8 +14,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      with:
-        path: main
+      # with:
+        # path: main
 
     # Install python
     - name: Set up Python 3.11
@@ -32,7 +32,7 @@ jobs:
           
     # pip install
     - name: Install packages
-      run: pip install -r ./main/project_requirements.txt
+      run: pip install -r project_requirements.txt
 
     # - name: Install packages
     #   shell: bash
