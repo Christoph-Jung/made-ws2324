@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: "check for secrets"
-        env: 
-            name_secret: ${{ secrets.KAGGLE_USERNAME }}
-            key_secret: ${{ secrets.KAGGLE_KEY }}
-        if: ${{ env.name_secret == '' }}
-        run: 'echo "echo the secret KAGGLE_USERNAME is missing. Go to \"settings \> secrets \> actions\" to create it"'
-        if: ${{ env.key_secret == '' }}
-        run: 'echo "echo the secret KAGGLE_KEY is missing. Go to \"settings \> secrets \> actions\" to create it"'
+      env: 
+        name_secret: ${{ secrets.KAGGLE_USERNAME }}
+        key_secret: ${{ secrets.KAGGLE_KEY }}
+      if: ${{ env.name_secret == '' }}
+      run: 'echo "echo the secret KAGGLE_USERNAME is missing. Go to \"settings \> secrets \> actions\" to create it"'
+      if: ${{ env.key_secret == '' }}
+      run: 'echo "echo the secret KAGGLE_KEY is missing. Go to \"settings \> secrets \> actions\" to create it"'
 
     - name: Checkout
       uses: actions/checkout@v3
