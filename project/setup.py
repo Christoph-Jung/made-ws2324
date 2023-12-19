@@ -1,3 +1,7 @@
+'''
+Setup the data pipeline
+'''
+
 import os
 from typing import Tuple
 
