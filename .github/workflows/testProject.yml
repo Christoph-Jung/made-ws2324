@@ -10,7 +10,7 @@ jobs:
   project-feedback:
     runs-on: ubuntu-latest
     steps:
-    - name: "check is MY_SECRET exists"
+    - name: "check for secrets"
         env: 
             name_secret: ${{ secrets.KAGGLE_USERNAME }}
             key_secret: ${{ secrets.KAGGLE_KEY }}
