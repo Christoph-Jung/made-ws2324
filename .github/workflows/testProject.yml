@@ -25,14 +25,18 @@ jobs:
         # cache: 'pip'
     
     # test
-    - name: Testt
+    - name: Test
       run: |
         ls
         ls ~
           
-
     # pip install
-    - run: pip install -r project_requirements.txt
+    # - run: pip install -r ./project_requirements.txt
+
+    - name: Install kaggle
+      shell: bash
+      run: |
+        pip install kaggle
     
     - name: Kaggle auth
       shell: bash
