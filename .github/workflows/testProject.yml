@@ -29,14 +29,14 @@ jobs:
     
     # kaggle login
     - name: Login to Kaggle
-      - uses: osbm/kaggle-login@main
-        with:
-          KAGGLE_USERNAME: {{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: {{ secrets.KAGGLE_KEY }}
+      uses: osbm/kaggle-login@main
+      with:
+        KAGGLE_USERNAME: {{ secrets.KAGGLE_USERNAME }}
+        KAGGLE_KEY: {{ secrets.KAGGLE_KEY }}
 
-      - name: Use kaggle api to list datasets
-        run: |
-          kaggle datasets list
+    - name: Use kaggle api to list datasets
+      run: |
+        kaggle datasets list
 
     # Run exercise feedback
     - name: Project feedback
