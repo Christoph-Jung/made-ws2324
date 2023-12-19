@@ -35,6 +35,9 @@ def authenticate() -> None:
 
 
 def download_data() -> Tuple[pd.DataFrame, pd.DataFrame]:
+    '''
+    Download both datasets from kaggle and store them into panda dataframes
+    '''
     try:
         kaggle.api.dataset_download_files("isaienkov/nba2k20-player-dataset", path="./data", unzip=True)
         kaggle.api.dataset_download_file(dataset="vivovinco/19912021-nba-stats",
