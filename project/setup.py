@@ -72,7 +72,7 @@ def download_data() -> Tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def process_data(stats_2k: pd.DataFrame, stats_player: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    stats_2k = stats_2k[['full_name', 'rating', 'version']]
+    stats_2k = stats_2k[['full_name', 'rating', 'salary', 'version']]
     stats_player_cleaned = stats_player.where(stats_player['Year'] == 2020)
     stats_player_cleaned.dropna(inplace=True)
 
