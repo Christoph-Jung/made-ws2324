@@ -12,3 +12,4 @@ project/__pycache__
 # for testing
 data.csv
 testing
+project/test_analysis.ipynb
