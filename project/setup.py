@@ -75,6 +75,8 @@ def process_data(stats_2k: pd.DataFrame, stats_player: pd.DataFrame) -> Tuple[pd
     stats_2k = stats_2k[['full_name', 'rating', 'salary', 'version']]
     stats_player_cleaned = stats_player.where(stats_player['Year'] == 2020)
     stats_player_cleaned.dropna(inplace=True)
+    stats_2k_cleaned = stats_2k.where(stats_2k['version'] == "NBA2k20")
+    stats_2k_cleaned.dropna(inplace=True)
 
     return stats_2k, stats_player_cleaned
 
