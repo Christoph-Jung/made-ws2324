@@ -97,7 +97,7 @@ def match_values(dataset: pd.DataFrame, models: list[LogisticRegression]) -> pd.
     return dataset
 
 
-def main_workflow() -> pd.DataFrame:
+def main_workflow() -> Tuple[pd.DataFrame, list[LogisticRegression]]:
     '''
     Main workflow to create one combined dataframe from the two data sources
     and the regression models
