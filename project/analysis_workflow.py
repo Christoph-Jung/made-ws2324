@@ -112,11 +112,11 @@ def main_workflow() -> pd.DataFrame:
         models.append(create_regression_model(dataset))
 
     # use the average of the three other groups to get an appropriate rating
-    for ind in range(len(dataset)):
+    for ind in range(len(groups)):
         groups[ind] = match_values(groups[ind], [x for i, x in enumerate(models) if i != ind])
 
     # concat the dataframes
-    return pd.concat(groups)
+    return pd.concat(groups), models
 
 
 if __name__ == "__main__":
