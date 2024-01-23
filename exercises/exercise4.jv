@@ -24,7 +24,7 @@ pipeline temperaturePipeline {
 
     block RenameTwoHeaders oftype CellWriter {
         at: range E1:F1;
-        write: ["Temperature", "Batterietemperatur"];
+        write: ["Temperatur", "Batterietemperatur"];
     }
 
     block TemperatureTableInterpreter oftype TableInterpreter {
@@ -34,15 +34,15 @@ pipeline temperaturePipeline {
             "Hersteller" oftype ValidTexts,
             "Model" oftype ValidTexts,
             "Monat" oftype ValidMonth,
-            "Temperature" oftype ValidTemperature,
+            "Temperatur" oftype ValidTemperature,
             "Batterietemperatur" oftype ValidTemperature,
             "Geraet aktiv" oftype BooleanTextValue, 
         ];
     }
 
     block CelsiusToFahrenheitTransformerTemperature oftype TableTransformer {
-        inputColumns: ["Temperature"];
-        outputColumn: "Temperature";
+        inputColumns: ["Temperatur"];
+        outputColumn: "Temperatur";
         use: CelsiusToFahrenheit;
     }
 
