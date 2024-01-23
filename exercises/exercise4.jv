@@ -1,0 +1,113 @@
+// TODO check if empty entries are being dropped
+
+pipeline temperaturePipeline {
+    temperatureExtractor
+        -> DeleteStatusCol
+        -> DBTableInterpreter
+        -> DBStopsLoader;
+
+    block temperatureExtractor oftype CSVExtractor { 
+        url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip"; 
+        delimiter: ";";
+    }
+
+    block DBTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "EVA_NR" oftype integer,
+            "DS100" oftype ValidTexts,
+            "IFOPT" oftype ValidIFOPT,
+            "NAME" oftype ValidTexts,
+            "Verkehr" oftype ValidVerkehrValues,
+            "Laenge" oftype ValidCoordinates,
+            "Breite" oftype ValidCoordinates,
+            "Betreiber_Name" oftype ValidTexts,
+            "Betreiber_Nr" oftype ValidTexts,
+        ];
+    }
+
+    block DBStopsLoader oftype SQLiteLoader {
+        table: "trainstops";
+        file: "./trainstops.sqlite";
+    }
+
+    block DeleteStatusCol oftype ColumnDeleter {
+        delete: [column J]; // status column
+    }
+
+    valuetype ValidVerkehrValues oftype text {
+        constraints: [
+            VerkehrValueConstraint,
+            noEmptyCells
+        ];
+    }
+    constraint VerkehrValueConstraint oftype AllowlistConstraint {
+        allowlist: ["FV", "RV", "nur DPN"];
+    }
+
+    valuetype ValidCoordinates oftype decimal {
+        constraints: [
+            coordinateConstraint,
+        ];
+    }
+    constraint coordinateConstraint oftype RangeConstraint {
+        lowerBound: -90;
+        upperBound: 90;      
+    }
+
+    // Valid "IFOPT" values follow this pattern:
+    // <exactly two characters>:<any amount of numbers>:<any amount of numbers><optionally another colon followed by any amount of numbers>
+    valuetype ValidIFOPT oftype text {
+        constraints: [
+            ifoptConstraint,
+            noEmptyCells
+        ];
+    }
+
+    constraint ifoptConstraint oftype RegexConstraint {
+          regex: /[-z]{2}:\d+:\d+(:\d+)?/;
+    }
+
+    valuetype ValidTexts oftype text {
+        constraints: [
+            noEmptyCells
+        ];
+    }
+
+    // Note: Length Constraint doesn't work without a maxLength setting
+    constraint noEmptyCells oftype LengthConstraint {
+        minLength: 1;
+        maxLength: 9007199254740991;
+    }
+}
+
+
+// Define a composite block to make the actual pipeline more compact
+composite blocktype CSVExtractor {
+    // Properties of the CSVExtractor, some with default values
+    property url oftype text;
+    property delimiter oftype text: ',';
+    property enclosing oftype text: '';
+    property enclosingEscape oftype text: '';
+
+    // Input and outputs
+    input inputName oftype None;
+    output outputName oftype Sheet;
+
+    // Pipeline definition from input, over blocks defined later, to output
+    inputName
+        ->FileExtractor
+        ->FileTextInterpreter
+        ->FileCSVInterpreter
+        ->outputName;
+
+    // Block definitions using values from properties by name
+    block FileExtractor oftype HttpExtractor { url: url; }
+    block FileTextInterpreter oftype TextFileInterpreter {}
+
+    block FileCSVInterpreter oftype CSVInterpreter {
+        delimiter: delimiter;
+        enclosing: enclosing;
+        enclosingEscape: enclosingEscape;
+    }
+}
