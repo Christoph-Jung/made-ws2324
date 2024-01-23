@@ -1,71 +1,91 @@
-// TODO check if empty entries are being dropped
-
 pipeline temperaturePipeline {
     temperatureExtractor
-        -> DeleteStatusCol
-        -> DBTableInterpreter
-        -> DBStopsLoader;
+        -> SelectCols
+        -> DeleteCols
+        -> RenameTwoHeaders
+        -> TemperatureTableInterpreter
+        -> CelsiusToFahrenheitTransformerTemperature
+        -> CelsiusToFahrenheitTransformerBatterie 
+        -> TemperatureLoader;
 
     block temperatureExtractor oftype CSVExtractor { 
         url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip"; 
         delimiter: ";";
+        path: "/data.csv";
     }
 
-    block DBTableInterpreter oftype TableInterpreter {
+    block SelectCols oftype CellRangeSelector {
+        select: range A1:K*;
+    }
+
+    block DeleteCols oftype ColumnDeleter {
+        delete: [column F, column G, column H, column I]; 
+    }
+
+    block RenameTwoHeaders oftype CellWriter {
+        at: range E1:F1;
+        write: ["Temperature", "Batterietemperatur"];
+    }
+
+    block TemperatureTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "EVA_NR" oftype integer,
-            "DS100" oftype ValidTexts,
-            "IFOPT" oftype ValidIFOPT,
-            "NAME" oftype ValidTexts,
-            "Verkehr" oftype ValidVerkehrValues,
-            "Laenge" oftype ValidCoordinates,
-            "Breite" oftype ValidCoordinates,
-            "Betreiber_Name" oftype ValidTexts,
-            "Betreiber_Nr" oftype ValidTexts,
+            "Geraet" oftype ValidPositiveIntegers,
+            "Hersteller" oftype ValidTexts,
+            "Model" oftype ValidTexts,
+            "Monat" oftype ValidMonth,
+            "Temperature" oftype ValidTemperature,
+            "Batterietemperatur" oftype ValidTemperature,
+            "Geraet aktiv" oftype BooleanTextValue, 
         ];
     }
 
-    block DBStopsLoader oftype SQLiteLoader {
-        table: "trainstops";
-        file: "./trainstops.sqlite";
+    block CelsiusToFahrenheitTransformerTemperature oftype TableTransformer {
+        inputColumns: ["Temperature"];
+        outputColumn: "Temperature";
+        use: CelsiusToFahrenheit;
     }
 
-    block DeleteStatusCol oftype ColumnDeleter {
-        delete: [column J]; // status column
+    block CelsiusToFahrenheitTransformerBatterie oftype TableTransformer {
+        inputColumns: ["Batterietemperatur"];
+        outputColumn: "Batterietemperatur";
+        use: CelsiusToFahrenheit;
     }
 
-    valuetype ValidVerkehrValues oftype text {
+    block TemperatureLoader oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
+    }
+
+    // Note: Applying the ValidTemperature Valuetype here leads to an error
+    // However this doesn't matter, because we check for valid Celsius values
+    // and then transform them to subsequently valid Fahrenheit values
+    transform CelsiusToFahrenheit {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 9/5) + 32;
+    }
+
+    valuetype ValidPositiveIntegers oftype integer {
         constraints: [
-            VerkehrValueConstraint,
-            noEmptyCells
+            positiveIntegerConstraint,
         ];
     }
-    constraint VerkehrValueConstraint oftype AllowlistConstraint {
-        allowlist: ["FV", "RV", "nur DPN"];
+
+    constraint positiveIntegerConstraint oftype RangeConstraint {
+        lowerBound: 1;
+        upperBound: 9007199254740991;      
     }
 
-    valuetype ValidCoordinates oftype decimal {
+    valuetype ValidMonth oftype integer {
         constraints: [
-            coordinateConstraint,
-        ];
-    }
-    constraint coordinateConstraint oftype RangeConstraint {
-        lowerBound: -90;
-        upperBound: 90;      
-    }
-
-    // Valid "IFOPT" values follow this pattern:
-    // <exactly two characters>:<any amount of numbers>:<any amount of numbers><optionally another colon followed by any amount of numbers>
-    valuetype ValidIFOPT oftype text {
-        constraints: [
-            ifoptConstraint,
-            noEmptyCells
+            validMonthConstraint,
         ];
     }
 
-    constraint ifoptConstraint oftype RegexConstraint {
-          regex: /[-z]{2}:\d+:\d+(:\d+)?/;
+    constraint validMonthConstraint oftype RangeConstraint {
+        lowerBound: 1;
+        upperBound: 12;      
     }
 
     valuetype ValidTexts oftype text {
@@ -79,6 +99,33 @@ pipeline temperaturePipeline {
         minLength: 1;
         maxLength: 9007199254740991;
     }
+
+    // The temperature cannot go below absolute zero, which corresponds to −273,15°C. This check happens before
+    // the transformation to Fahrenheit, therefore we need to use Celsius.
+    // There is probably also a narrower expected maximum temperature for batteries than 500°C,
+    // however they are unknown to me. Setting one is still sound, because we want to catch possible 
+    // errors and this leaves enough allowance
+    valuetype ValidTemperature oftype decimal {
+        constraints: [
+            validTemperatureConstraint,
+        ];
+    }
+    
+    constraint validTemperatureConstraint oftype RangeConstraint {
+        lowerBound: -273.15;
+        upperBound: 500;      
+    }
+
+    // Model boolean value by only allowing "Ja" or "Nein" as valid input
+    valuetype BooleanTextValue oftype text {
+        constraints: [
+            validBooleanValue
+        ];
+    }
+
+    constraint validBooleanValue oftype AllowlistConstraint {
+        allowlist: ["Ja", "Nein"];
+    }
 }
 
 
@@ -86,6 +133,7 @@ pipeline temperaturePipeline {
 composite blocktype CSVExtractor {
     // Properties of the CSVExtractor, some with default values
     property url oftype text;
+    property path oftype text;
     property delimiter oftype text: ',';
     property enclosing oftype text: '';
     property enclosingEscape oftype text: '';
@@ -96,18 +144,19 @@ composite blocktype CSVExtractor {
 
     // Pipeline definition from input, over blocks defined later, to output
     inputName
-        ->FileExtractor
+        ->ZipExtractor
+        ->DataFilePicker
         ->FileTextInterpreter
         ->FileCSVInterpreter
         ->outputName;
 
     // Block definitions using values from properties by name
-    block FileExtractor oftype HttpExtractor { url: url; }
+    block ZipExtractor oftype GTFSExtractor { url: url; }
+    block DataFilePicker oftype FilePicker { path: path; }
     block FileTextInterpreter oftype TextFileInterpreter {}
-
     block FileCSVInterpreter oftype CSVInterpreter {
         delimiter: delimiter;
         enclosing: enclosing;
         enclosingEscape: enclosingEscape;
-    }
+    }   
 }
